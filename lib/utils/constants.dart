@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'format_utils.dart';
 
 class AppColors {
   static const Color primaryBlue = Color(0xFF0A1254); // Azul oscuro
@@ -42,4 +43,7 @@ class AppStrings {
   static const String tabMap = 'Mapa';
   static const String tabHistory = 'Historial';
   static const String tabProfile = 'Perfil';
+
+  static String formatDate(DateTime date) => FormatUtils.formatDate(date);
+  static String formatTime(DateTime date) => FormatUtils.formatTime(date);
 }

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:flutter_map_tile_caching/flutter_map_tile_caching.dart';
 
 class MapWidget extends StatelessWidget {
   final List<LatLng> points;
@@ -21,7 +20,6 @@ class MapWidget extends StatelessWidget {
       children: [
         TileLayer(
           urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-          tileProvider: FMTC.instance('mapStore').getTileProvider(),
         ),
         if (points.isNotEmpty)
           PolylineLayer(

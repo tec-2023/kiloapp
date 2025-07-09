@@ -28,11 +28,11 @@ class GpsService {
     if (!granted) {
       throw Exception('Permiso de ubicación denegado');
     }
-
     _positionSub ??= Geolocator.getPositionStream(
-      desiredAccuracy: accuracy,
-      distanceFilter: 0,
-      intervalDuration: Duration(milliseconds: intervalMs),
+      locationSettings: LocationSettings(
+        accuracy: accuracy,
+        distanceFilter: 0,
+      ),
     ).listen((Position pos) {
       _controller.add(pos);
     });

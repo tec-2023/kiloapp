@@ -1,3 +1,5 @@
+
+import 'models/trip_model.dart';
 import 'package:flutter/material.dart';
 import 'utils/theme.dart';
 import 'utils/constants.dart';
@@ -33,8 +35,16 @@ class KiloApp extends StatelessWidget {
         Routes.register: (context) => const RegisterScreen(),
         Routes.home: (context) => const HomeScreen(),
         Routes.history: (context) => const HistoryScreen(),
-        Routes.tripDetail: (context) => const TripDetailScreen(),
         Routes.profile: (context) => const ProfileScreen(),
+      },
+      onGenerateRoute: (settings) {
+        if (settings.name == Routes.tripDetail) {
+          final trip = settings.arguments as TripModel;
+          return MaterialPageRoute(
+            builder: (context) => TripDetailScreen(trip: trip),
+          );
+        }
+        return null;
       },
     );
   }

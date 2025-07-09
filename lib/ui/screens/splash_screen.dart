@@ -25,7 +25,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
 
     // Chequea permisos esenciales
     if (!await Permission.locationWhenInUse.isGranted) {
-      Navigator.of(context).pushReplacementNamed(Routes.permissions);
+      Navigator.of(context).pushReplacementNamed(Routes.permission);
       return;
     }
 

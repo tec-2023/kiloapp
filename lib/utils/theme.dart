@@ -32,7 +32,7 @@ class AppTheme {
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.accentYellow,
-          onPrimary: AppColors.onAccent,
+          foregroundColor: AppColors.onAccent,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
           ),

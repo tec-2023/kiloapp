@@ -1,3 +1,4 @@
+// Asegúrate de tener supabase_flutter en pubspec.yaml
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../models/user_model.dart';
 
@@ -20,20 +21,17 @@ class AuthService {
       },
     );
 
-    if (response.user != null) {
+    final user = response.user;
+    if (user != null) {
       // Crear perfil en tabla "profiles"
-      final user = response.user!;
-      await _client
-          .from('profiles')
-          .insert({
-            'id': user.id,
-            'name': name,
-            'email': email,
-            'phoneNumber': phoneNumber,
-            'role': 'user',
-            'photoUrl': '',
-          })
-          .execute();
+      await _client.from('profiles').insert({
+        'id': user.id,
+        'name': name,
+        'email': email,
+        'phoneNumber': phoneNumber,
+        'photoUrl': '',
+        'role': 'user',
+      });
       return UserModel(
         id: user.id,
         name: name,
@@ -43,8 +41,8 @@ class AuthService {
         role: 'user',
         token: response.session?.accessToken ?? '',
         isEmailVerified: user.confirmedAt != null,
-        createdAt: user.createdAt!,
-        lastLogin: user.lastSignInAt ?? user.createdAt!,
+        createdAt: DateTime.parse(user.createdAt),
+        lastLogin: user.lastSignInAt != null ? DateTime.parse(user.lastSignInAt!) : DateTime.parse(user.createdAt),
       );
     }
     return null;
@@ -55,31 +53,26 @@ class AuthService {
     required String email,
     required String password,
   }) async {
-    final response = await _client.auth.signIn(
+    final response = await _client.auth.signInWithPassword(
       email: email,
       password: password,
     );
-
     final user = response.user;
     if (user != null) {
       // Obtener datos de perfil
-      final profile = await _client
-          .from('profiles')
-          .select()
-          .eq('id', user.id)
-          .single();
-
+      final profileRes = await _client.from('profiles').select().eq('id', user.id).single();
+      final profile = profileRes;
       return UserModel(
         id: user.id,
-        name: profile['name'] as String,
-        email: user.email!,
-        phoneNumber: profile['phoneNumber'] as String?,
-        photoUrl: profile['photoUrl'] as String? ?? '',
-        role: profile['role'] as String? ?? 'user',
+        name: profile['name'] ?? '',
+        email: user.email ?? '',
+        phoneNumber: profile['phoneNumber'],
+        photoUrl: profile['photoUrl'] ?? '',
+        role: profile['role'] ?? 'user',
         token: response.session?.accessToken ?? '',
         isEmailVerified: user.confirmedAt != null,
-        createdAt: user.createdAt!,
-        lastLogin: user.lastSignInAt ?? user.createdAt!,
+        createdAt: DateTime.parse(user.createdAt),
+        lastLogin: user.lastSignInAt != null ? DateTime.parse(user.lastSignInAt!) : DateTime.parse(user.createdAt),
       );
     }
     return null;
@@ -94,23 +87,19 @@ class AuthService {
   Future<UserModel?> getCurrentUser() async {
     final user = _client.auth.currentUser;
     if (user != null) {
-      final profile = await _client
-          .from('profiles')
-          .select()
-          .eq('id', user.id)
-          .single();
-
+      final profileRes = await _client.from('profiles').select().eq('id', user.id).single();
+      final profile = profileRes;
       return UserModel(
         id: user.id,
-        name: profile['name'] as String,
-        email: user.email!,
-        phoneNumber: profile['phoneNumber'] as String?,
-        photoUrl: profile['photoUrl'] as String? ?? '',
-        role: profile['role'] as String? ?? 'user',
-        token: _client.auth.session()?.accessToken ?? '',
+        name: profile['name'] ?? '',
+        email: user.email ?? '',
+        phoneNumber: profile['phoneNumber'],
+        photoUrl: profile['photoUrl'] ?? '',
+        role: profile['role'] ?? 'user',
+        token: _client.auth.currentSession?.accessToken ?? '',
         isEmailVerified: user.confirmedAt != null,
-        createdAt: user.createdAt!,
-        lastLogin: user.lastSignInAt ?? user.createdAt!,
+        createdAt: DateTime.parse(user.createdAt),
+        lastLogin: user.lastSignInAt != null ? DateTime.parse(user.lastSignInAt!) : DateTime.parse(user.createdAt),
       );
     }
     return null;
@@ -131,8 +120,7 @@ class AuthService {
     final res = await _client
         .from('profiles')
         .update(updates)
-        .eq('id', id)
-        .execute();
+        .eq('id', id);
 
     return res.error == null;
   }

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:latlong2/latlong.dart';
 import '../../models/trip_model.dart';
 import '../../ui/screens/trip_detail_screen.dart';
 import '../../utils/constants.dart';

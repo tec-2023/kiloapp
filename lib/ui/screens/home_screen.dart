@@ -9,6 +9,7 @@ import '../../providers/trip_provider.dart';
 import '../../services/gps_service.dart';
 import '../../models/trip_model.dart';
 import '../widgets/map_widget.dart';
+import '../../main.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -23,6 +24,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   bool _tracking = false;
   final List<LatLng> _points = [];
   late StreamSubscription _sub;
+  DateTime? _tripStartTime;
 
   @override
   void initState() {
@@ -34,6 +36,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   void _startTrip() async {
     await _gps.startTracking();
+    _tripStartTime = DateTime.now();
     _sub = _gps.onPositionChanged.listen((pos) {
       setState(() {
         _points.add(LatLng(pos.latitude, pos.longitude));
@@ -46,8 +49,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     await _gps.stopTracking();
     _sub.cancel();
     final endTime = DateTime.now();
-    final startTime = DateTime.fromMillisecondsSinceEpoch(
-        _points.first.millisecondsSinceEpoch);
+    final startTime = _tripStartTime ?? endTime;
     final distance = _calculateDistance(_points);
     final trip = TripModel(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
@@ -63,6 +65,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     setState(() {
       _tracking = false;
       _points.clear();
+      _tripStartTime = null;
     });
   }
 
@@ -80,7 +83,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final tripsState = ref.watch(tripProvider(_userId));
     return Scaffold(
       body: MapWidget(points: _points),
       bottomNavigationBar: BottomNavigationBar(

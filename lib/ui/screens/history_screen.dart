@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../utils/constants.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/trip_provider.dart';
-import '../../models/trip_model.dart';
 import '../widgets/trip_card.dart';
 
 class HistoryScreen extends ConsumerWidget {
