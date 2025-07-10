@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:flutter_signin_button/flutter_signin_button.dart';
 import '../../utils/constants.dart';
-import '../../utils/theme.dart';
 import '../../providers/auth_provider.dart';
 import '../../main.dart';
 
 class RegisterScreen extends ConsumerStatefulWidget {
-  const RegisterScreen({Key? key}) : super(key: key);
+  const RegisterScreen({super.key});
 
   @override
   ConsumerState<RegisterScreen> createState() => _RegisterScreenState();
@@ -112,6 +113,22 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   style: const TextStyle(color: Colors.red),
                   textAlign: TextAlign.center,
                 ),
+              const SizedBox(height: 16),
+              SignInButton(
+                Buttons.Google,
+                text: 'Registrarse con Google',
+                onPressed: () async {
+                  setState(() => _isLoading = true);
+                  try {
+                    await Supabase.instance.client.auth.signInWithOAuth(
+                      OAuthProvider.google,
+                    );
+                  } catch (e) {
+                    setState(() => _error = 'Error con Google: $e');
+                  }
+                  setState(() => _isLoading = false);
+                },
+              ),
               const Spacer(),
               ElevatedButton(
                 onPressed: _isLoading ? null : _submit,

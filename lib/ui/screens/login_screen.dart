@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:flutter_signin_button/flutter_signin_button.dart';
 import '../../utils/constants.dart';
-import '../../utils/theme.dart';
 import '../../providers/auth_provider.dart';
 import '../../main.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+  const LoginScreen({super.key});
 
   @override
   ConsumerState<LoginScreen> createState() => _LoginScreenState();
@@ -104,6 +105,34 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   Navigator.of(context).pushReplacementNamed(Routes.register);
                 },
                 child: const Text(AppStrings.btnRegister),
+              ),
+              const SizedBox(height: 24),
+              ElevatedButton(
+                onPressed: () {
+                  ref.read(authStateProvider.notifier).signInAsGuest();
+                  Navigator.of(context).pushReplacementNamed(Routes.home);
+                },
+                child: const Text('Ingresar como invitado'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.grey[700],
+                  foregroundColor: Colors.white,
+                ),
+              ),
+              const SizedBox(height: 16),
+              SignInButton(
+                Buttons.Google,
+                text: 'Continuar con Google',
+                onPressed: () async {
+                  setState(() => _isLoading = true);
+                  try {
+                    await Supabase.instance.client.auth.signInWithOAuth(
+                      OAuthProvider.google,
+                    );
+                  } catch (e) {
+                    setState(() => _error = 'Error con Google: $e');
+                  }
+                  setState(() => _isLoading = false);
+                },
               ),
             ],
           ),

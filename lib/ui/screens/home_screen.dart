@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:flutter_map/flutter_map.dart';
 import '../../utils/constants.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/trip_provider.dart';
@@ -12,7 +11,7 @@ import '../widgets/map_widget.dart';
 import '../../main.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  const HomeScreen({super.key});
 
   @override
   ConsumerState<HomeScreen> createState() => _HomeScreenState();
@@ -31,7 +30,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     super.initState();
     final user = ref.read(authStateProvider)!;
     _userId = user.id;
-    ref.read(tripProvider(_userId).notifier).loadTrips();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(tripProvider(_userId).notifier).loadTrips();
+    });
   }
 
   void _startTrip() async {

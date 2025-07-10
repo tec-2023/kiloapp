@@ -6,7 +6,7 @@ import '../../providers/trip_provider.dart';
 import '../widgets/trip_card.dart';
 
 class HistoryScreen extends ConsumerWidget {
-  const HistoryScreen({Key? key}) : super(key: key);
+  const HistoryScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

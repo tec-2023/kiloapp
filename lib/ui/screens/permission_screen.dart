@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../utils/constants.dart';
-import '../../utils/theme.dart';
 import '../../main.dart';
 import '../../services/gps_service.dart';
 
 class PermissionScreen extends ConsumerStatefulWidget {
-  const PermissionScreen({Key? key}) : super(key: key);
+  const PermissionScreen({super.key});
 
   @override
   ConsumerState<PermissionScreen> createState() => _PermissionScreenState();

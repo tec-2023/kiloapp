@@ -57,6 +57,22 @@ class AuthState extends StateNotifier<UserModel?> {
     await _authService.signOut();
     state = null;
   }
+
+  /// Ingresar como invitado
+  void signInAsGuest() {
+    state = UserModel(
+      id: 'guest',
+      name: 'Invitado',
+      email: '',
+      phoneNumber: null,
+      photoUrl: '',
+      role: 'guest',
+      token: '',
+      isEmailVerified: false,
+      createdAt: DateTime.now(),
+      lastLogin: DateTime.now(),
+    );
+  }
 }
 
 /// Proveedor de estado de autenticación

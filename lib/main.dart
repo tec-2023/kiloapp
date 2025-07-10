@@ -1,6 +1,7 @@
-
 import 'models/trip_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'utils/theme.dart';
 import 'utils/constants.dart';
 import 'ui/screens/splash_screen.dart';
@@ -14,8 +15,21 @@ import 'ui/screens/profile_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // Inicializar servicios aquí si es necesario (por ejemplo Supabase)
-  runApp(const KiloApp());
+  final anonKey = String.fromEnvironment('SUPABASE_KEY');
+  print('==============================');
+  print('SUPABASE_KEY:');
+  print(anonKey);
+  print('==============================');
+  await Supabase.initialize(
+    url: 'https://wydeynespdgvksfyhtwd.supabase.co',
+    anonKey: anonKey,
+  );
+  print('Supabase inicializado');
+  runApp(
+    ProviderScope(
+      child: KiloApp(),
+    ),
+  );
 }
 
 class KiloApp extends StatelessWidget {
